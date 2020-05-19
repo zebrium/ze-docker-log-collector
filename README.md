@@ -63,7 +63,7 @@ The following environment variables are supported by the collecotr:
   </tr>
   <tr>
     <td>ZE_FILTER_LABELS</td>
-    <td>Collect logs for containers whose labels match the labels as defined in ZE_FILTER_LABELS. The format is <pre>label1:label1_value,label2:label2_value</pre>. These can include wildcards, for example, my_label:xyz*</td>
+    <td>Collect logs for containers whose labels match the labels as defined in ZE_FILTER_LABELS. The format is: <pre>label1:label1_value,label2:label2_value</pre> These can include wildcards, for example, my_label:xyz*</td>
     <td>Empty. Optional</td>
     <td></td>
   </tr>
