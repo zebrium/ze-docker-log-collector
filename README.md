@@ -16,6 +16,23 @@ sudo docker run -d --name="zdocker-log-collector" --restart=always \
                 zebrium/docker-log-collector:latest
 ```
 
+### Docker Compose
+Use the following configuration file to deploy via docker-compose command:
+```
+version: '3.5'
+
+services:
+  zdocker-log-collector:
+    image: zebrium/docker-log-collector:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      ZE_LOG_COLLECTOR_URL: "<ZE_LOG_COLLECTOR_URL>"
+      ZE_LOG_COLLECTOR_TOKEN: "<ZE_LOG_COLLECTOR_TOKEN>"
+      ZE_HOSTNAME: "<HOSTNAME>"
+```
+
 ## Environment Variables
 The following environment variables are supported by the collecotr:
 <table>
