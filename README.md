@@ -53,17 +53,17 @@ The following environment variables are supported by the collecotr:
     <td>ZE_FLUSH_TIMEOUT</td>
     <td>Interval between sending batches of log data to Zebrium log server.</td>
     <td>30 seconds. Optional</td>
-    <td>Unit is in seconds. Please note Zebrium output plugin sends data immediately to log server when accumulated data reaches `ZE_MAX_INGEST_SIZE` bytes.</td>
+    <td>Unit is in seconds. Please note Zebrium output plugin sends data immediately to log server when accumulated data reaches ZE_MAX_INGEST_SIZE bytes.</td>
   </tr>
   <tr>
     <td>ZE_FILTER_NAME</td>
-    <td>Collect logs for containers whose names match filter name pattern. These can include wildcards, for example, my_container1*</td>
+    <td>Collect logs for containers whose names match filter name pattern. These can include wildcards, for example, <i>my_container1*</i></td>
     <td>Empty. Optional</td>
     <td></td>
   </tr>
   <tr>
     <td>ZE_FILTER_LABELS</td>
-    <td>Collect logs for containers whose labels match the labels as defined in ZE_FILTER_LABELS. The format is: <pre>label1:label1_value,label2:label2_value</pre> These can include wildcards, for example, my_label:xyz*</td>
+    <td>Collect logs for containers whose labels match the labels as defined in ZE_FILTER_LABELS. The format is: <i>label1:label1_value,label2:label2_value</i> These can include wildcards, for example, <i>my_label:xyz*</i></td>
     <td>Empty. Optional</td>
     <td></td>
   </tr>
