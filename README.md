@@ -55,6 +55,19 @@ The following environment variables are supported by the collecotr:
     <td>30 seconds. Optional</td>
     <td>Unit is in seconds. Please note Zebrium output plugin sends data immediately to log server when accumulated data reaches `ZE_MAX_INGEST_SIZE` bytes.</td>
   </tr>
+  <tr>
+    <td>ZE_FILTER_NAME</td>
+    <td>Collect logs for containers whose names match filter name pattern. These can include wildcards, for example, my_container1*</td>
+    <td>Empty. Optional</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>ZE_FILTER_LABELS</td>
+    <td>Collect logs for containers whose labels match the labels. These can include wildcards, for example, my_label:xyz*</td>
+    <td>Empty. Optional</td>
+    <td></td>
+  </tr>
+
 </table>
 
 
