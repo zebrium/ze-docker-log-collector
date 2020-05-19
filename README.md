@@ -32,6 +32,21 @@ services:
       ZE_LOG_COLLECTOR_TOKEN: "<ZE_LOG_COLLECTOR_TOKEN>"
       ZE_HOSTNAME: "<HOSTNAME>"
 ```
+### AWS Elastic Container Service (ECS)
+
+Add the following serivce to ECS on EC2 cluster configuration.
+```
+services:
+  zdocker-log-collector:
+    image: zebrium/docker-log-collector:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      ZE_LOG_COLLECTOR_URL: "https://zapi01.zebrium.com/log/api/v2/ingest"
+      ZE_LOG_COLLECTOR_TOKEN: "4722EFC742AFB7926C500476894CBB8692965249"
+```
+To collect container logs from all nodes in an ECS cluster, zdocker-log-collector service should be configured to run as an ECS daemon task.
 
 ## Environment Variables
 The following environment variables are supported by the collecotr:
