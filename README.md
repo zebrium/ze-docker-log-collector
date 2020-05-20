@@ -46,7 +46,12 @@ services:
       ZE_LOG_COLLECTOR_URL: "<ZE_LOG_COLLECTOR_URL>"
       ZE_LOG_COLLECTOR_TOKEN: "<ZE_LOG_COLLECTOR_TOKEN>"
 ```
-To collect container logs from all nodes in an ECS cluster, zdocker-log-collector service should be configured to run as an ECS daemon task.
+To collect container logs from all nodes in an ECS cluster, zdocker-log-collector service must be configured to run as an ECS daemon task. Please follow the steps below to configure the daemon task:
+1. Log in to the AWS console and navigate to the ECS Clusters section. Click into your cluster you run the Agent on.
+2. Choose Service tab, click on the Create button.
+3. For launch type, select EC2, for service type, select DAEMON, type a service name, and click on Next step.
+4. For Load balance type option, select None, and click on Next step. On next page, select Next step without configuring Auto Scaling.
+5. Review and click on Create Service.
 
 ## Environment Variables
 The following environment variables are supported by the collecotr:
