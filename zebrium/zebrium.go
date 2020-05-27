@@ -50,6 +50,9 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 	if url == "" {
 		log.Fatal("Environment variable ", ZapiUrlEnvVar, " is not set")
 	}
+	if strings.HasSuffix(url, "zebrium.com") {
+		url = url + "/log/api/v2/ingest"
+	}
 
 	token := os.Getenv(ZapiTokenEnvVar)
 	if token == "" {
