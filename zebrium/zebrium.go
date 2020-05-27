@@ -11,15 +11,16 @@ import (
 )
 
 const (
-	adapterName         = "zebrium"
-	filterNameEnvVar    = "ZE_FILTER_NAME"
-	filterLabelsEnvVar  = "ZE_FILTER_LABELS"
-	ZapiUrlEnvVar       = "ZE_LOG_COLLECTOR_URL"
-	ZapiTokenEnvVar     = "ZE_LOG_COLLECTOR_TOKEN"
-	VerifySslEnvVar     = "ZE_VERIFY_SSL"
-	HostnameEnvvar      = "ZE_HOSTNAME"
-	MaxIngestSizeEnvVar = "ZE_MAX_INGEST_SIZE"
-	FlushTimeoutEnvVar  = "ZE_FLUSH_TIMEOUT"
+	adapterName          = "zebrium"
+	filterNameEnvVar     = "ZE_FILTER_NAME"
+	filterLabelsEnvVar   = "ZE_FILTER_LABELS"
+	ZapiUrlEnvVar        = "ZE_LOG_COLLECTOR_URL"
+	ZapiTokenEnvVar      = "ZE_LOG_COLLECTOR_TOKEN"
+	VerifySslEnvVar      = "ZE_VERIFY_SSL"
+	DeploymentNameEnvVar = "ZE_DEPLOYMENT_NAME"
+	HostnameEnvvar       = "ZE_HOSTNAME"
+	MaxIngestSizeEnvVar  = "ZE_MAX_INGEST_SIZE"
+	FlushTimeoutEnvVar   = "ZE_FLUSH_TIMEOUT"
 )
 
 func init() {
@@ -61,6 +62,12 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 		verifySsl = false
 	}
 
+	deploymentName := os.Getenv(DeploymentNameEnvVar)
+	if token == "" {
+		deploymentName = "default"
+		log.Info("Use default deployment name ", deploymentName)
+	}
+
 	ingestSizeStr := os.Getenv(MaxIngestSizeEnvVar)
 	if ingestSizeStr == "" {
 		ingestSizeStr = "1048576"
@@ -84,6 +91,7 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 		url,
 		token,
 		verifySsl,
+		deploymentName,
 		os.Getenv(HostnameEnvvar),
 		ingestSize,
 		flushTimeout,

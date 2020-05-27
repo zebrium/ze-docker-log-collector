@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	collectorVers = "1.29.0"
+	collectorVers = "logspout-1.29.1"
 )
 
 type Adapter struct {
@@ -22,6 +22,7 @@ type Adapter struct {
 	ZapiUrl        string
 	ZapiToken      string
 	VerifySsl      bool
+	DeploymentName string
 	Hostname       string
 	FlushTimeout   time.Duration
 	Queue        chan ContainerLogMessage
@@ -29,12 +30,13 @@ type Adapter struct {
 
 // Message structure:
 type ContainerLogMessage struct {
-	Message       string        `json:"message"`
-	Source        string        `json:"source"`
+	Message          string        `json:"message"`
+	Source           string        `json:"source"`
 	// Timestamp on log message from container log
-	EpochNanos    int64         `json:"epoch_nanos"`
-	Collector     string        `json:"collector"`
-	Container     ContainerMeta `json:"container"`
+	EpochNanos       int64         `json:"epoch_nanos"`
+	Collector        string        `json:"collector"`
+	ZeDeploymentName string        `json:"ze_deployment_name"`
+	Container        ContainerMeta `json:"container"`
 }
 
 type ContainerMeta struct {
@@ -50,16 +52,18 @@ type IngestRequest struct {
 	Messages  []string           `json:"messages"`
 }
 
-func New(zapiUrl string, zapiToken string, verifySsl bool, hostname string,
+func New(zapiUrl string, zapiToken string, verifySsl bool,
+	 deploymentName string, hostname string,
 	 maxIngestSize int, flushTimeout int) *Adapter {
 	log.Println("hostname=" + hostname)
 	adapter := &Adapter{
-		MaxIngestSize: maxIngestSize,
-		ZapiUrl:       zapiUrl,
-		ZapiToken:     zapiToken,
-		VerifySsl:     verifySsl,
-		Hostname:      hostname,
-		FlushTimeout:  time.Duration(flushTimeout) * time.Second,
+		MaxIngestSize:  maxIngestSize,
+		ZapiUrl:        zapiUrl,
+		ZapiToken:      zapiToken,
+		VerifySsl:      verifySsl,
+		DeploymentName: deploymentName,
+		Hostname:       hostname,
+		FlushTimeout:   time.Duration(flushTimeout) * time.Second,
 		Queue:      make(chan ContainerLogMessage),
 	}
 
@@ -80,6 +84,7 @@ func (a *Adapter) Stream(logstream chan *router.Message) {
 			Source:            m.Source,
 			EpochNanos:        m.Time.UnixNano(),
 			Collector:         collectorVers,
+			ZeDeploymentName:  a.DeploymentName,
                         Container:  ContainerMeta {
 				Name:     strings.Trim(m.Container.Name, "/"),
 				Id:       m.Container.ID,
