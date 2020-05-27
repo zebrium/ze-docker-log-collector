@@ -68,7 +68,7 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 	deploymentName := os.Getenv(DeploymentNameEnvVar)
 	if token == "" {
 		deploymentName = "default"
-		log.Info("Use default deployment name ", deploymentName)
+		log.Println("Use default deployment name ", deploymentName)
 	}
 
 	ingestSizeStr := os.Getenv(MaxIngestSizeEnvVar)
