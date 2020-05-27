@@ -1,5 +1,5 @@
 # DOCKER CONTAINER LOG COLLECTOR
-Zebrium's docker container log collector collects container logs and and sends logs to Zebrium for automated Anomaly detection.
+Zebrium's docker container log collector collects container logs and sends logs to Zebrium for automated Incident detection.
 Our github repository is located [here](https://github.com/zebrium/ze-docker-log-collector).
 
 # ze-docker-log-collector
@@ -34,7 +34,7 @@ services:
 ```
 ### AWS Elastic Container Service (ECS)
 
-Add the following serivce to ECS on EC2 cluster configuration.
+Add the following service to ECS on EC2 cluster configuration.
 ```
 services:
   zdocker-log-collector:
@@ -54,7 +54,7 @@ To collect container logs from all nodes in an ECS cluster, zdocker-log-collecto
 5. Review and click on Create Service.
 
 ## Environment Variables
-The following environment variables are supported by the collecotr:
+The following environment variables are supported by the collector:
 <table>
   <tr>
     <th>Environment Variables</th>
@@ -109,7 +109,7 @@ The following environment variables are supported by the collecotr:
 
 
 ## Testing your installation
-Once the docker log collector software has been deployed in your environment, your container logs and anomaly detection will be available in the Zebrium UI.
+Once the docker log collector software has been deployed in your environment, your container logs and incident detection will be available in the Zebrium UI.
 
 ## Contributors
 * Brady Zuo (Zebrium)
