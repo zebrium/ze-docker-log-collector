@@ -13,6 +13,7 @@ sudo docker run -d --name="zdocker-log-collector" --restart=always \
                 -e ZE_LOG_COLLECTOR_URL="<ZE_LOG_COLLECTOR_URL>" \
                 -e ZE_LOG_COLLECTOR_TOKEN="<ZE_LOG_COLLECTOR_TOKEN>" \
                 -e ZE_HOSTNAME="<HOSTNAME>" \
+                -e ZE_DEPLOYMENT_NAME="YOUR_DEPLOYMENT_NAME_HERE" \
                 zebrium/docker-log-collector:latest
 ```
 
@@ -30,6 +31,7 @@ services:
     environment:
       ZE_LOG_COLLECTOR_URL: "<ZE_LOG_COLLECTOR_URL>"
       ZE_LOG_COLLECTOR_TOKEN: "<ZE_LOG_COLLECTOR_TOKEN>"
+      ZE_DEPLOYMENT_NAME: "<YOUR_DEPLOYMENT_NAME_HERE>"
       ZE_HOSTNAME: "<HOSTNAME>"
 ```
 ### AWS Elastic Container Service (ECS)
@@ -45,6 +47,7 @@ services:
     environment:
       ZE_LOG_COLLECTOR_URL: "<ZE_LOG_COLLECTOR_URL>"
       ZE_LOG_COLLECTOR_TOKEN: "<ZE_LOG_COLLECTOR_TOKEN>"
+      ZE_DEPLOYMENT_NAME: "<YOUR_DEPLOYMENT_NAME_HERE>"
 ```
 To collect container logs from all nodes in an ECS cluster, zdocker-log-collector service must be configured to run as an ECS daemon task. Please follow the steps below to configure the daemon task:
 1. Log in to the AWS console and navigate to the ECS Clusters section. Click into your cluster you run the Agent on.
