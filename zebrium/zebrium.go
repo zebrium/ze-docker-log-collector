@@ -47,6 +47,7 @@ func init() {
 
 func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 	url := os.Getenv(ZapiUrlEnvVar)
+	url = strings.Trim(url, " \t\"'")
 	if url == "" {
 		log.Fatal("Environment variable ", ZapiUrlEnvVar, " is not set")
 	}
