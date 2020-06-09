@@ -56,6 +56,7 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 	}
 
 	token := os.Getenv(ZapiTokenEnvVar)
+	token = strings.Trim(token, " \t\"'")
 	if token == "" {
 		log.Fatal("Environment variable ", ZapiTokenEnvVar, " is not set")
 	}
