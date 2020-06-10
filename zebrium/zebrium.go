@@ -68,6 +68,7 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 	}
 
 	deploymentName := os.Getenv(DeploymentNameEnvVar)
+	deploymentName = strings.Trim(deploymentName, " \t\"'")
 	if token == "" {
 		deploymentName = "default"
 		log.Println("Use default deployment name ", deploymentName)
