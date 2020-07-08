@@ -56,6 +56,8 @@ To collect container logs from all nodes in an ECS cluster, zdocker-log-collecto
 4. For Load balance type option, select None, and click on Next step. On next page, select Next step without configuring Auto Scaling.
 5. Review and click on Create Service.
 
+Please note ECS tasks must be configured to use 'json-file' Log Driver for Zebrium log collector to receive container logs. If there is special log configuration on ECS instances, for example, using UserData section on instance to set log configuration, those configurations may need to be modified or deleted.
+
 ## Environment Variables
 The following environment variables are supported by the collector:
 <table>
