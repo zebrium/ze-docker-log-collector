@@ -1,4 +1,17 @@
 #!/bin/sh
+#
+# Please note you should not run this script directly to build
+# docker image. This script is run automatically inside docker
+# container when we build image.
+#
+# To build container image, use the command below:
+#
+# docker build --no-cache -t <repo>/ze-docker-log-collector:<tag> -f Dockerfile .
+#
+# Please note code for building is from github.com/zebrium/ze-docker-log-collector/zebrium,
+# not this repo. So you must commit and push changes before you make a build.
+#
+
 set -e
 apk add --update go git mercurial build-base ca-certificates
 mkdir -p /go/src/github.com/gliderlabs
