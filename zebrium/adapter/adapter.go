@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	collectorVers = "logspout-1.29.1"
+	collectorVers = "1.47.0-docker"
 )
 
 type Adapter struct {
