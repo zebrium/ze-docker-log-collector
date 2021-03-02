@@ -81,7 +81,7 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 	log.Printf("%s=%s\n", AwsExecEnv, awsEnvVal)
 	if awsEnvVal != "" && strings.HasPrefix(awsEnvVal, "AWS_ECS_") {
 		log.Printf("Detected running on ECS (%s=%s), set platform to ecs\n", AwsExecEnv, awsEnvVal)
-		platform := "ecs"
+		platform = "ecs"
 	}
 
 	ingestSizeStr := os.Getenv(MaxIngestSizeEnvVar)
