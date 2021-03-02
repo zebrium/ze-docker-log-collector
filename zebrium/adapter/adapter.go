@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	collectorVers = "1.47.0-docker"
+	collectorVers = "1.47.0"
 )
 
 type Adapter struct {
@@ -24,6 +24,7 @@ type Adapter struct {
 	VerifySsl      bool
 	DeploymentName string
 	Hostname       string
+	Platform       string
 	FlushTimeout   time.Duration
 	Queue        chan ContainerLogMessage
 }
@@ -53,7 +54,7 @@ type IngestRequest struct {
 }
 
 func New(zapiUrl string, zapiToken string, verifySsl bool,
-	 deploymentName string, hostname string,
+	 deploymentName string, hostname string, platform string,
 	 maxIngestSize int, flushTimeout int) *Adapter {
 	log.Println("hostname=" + hostname)
 	adapter := &Adapter{
@@ -63,6 +64,7 @@ func New(zapiUrl string, zapiToken string, verifySsl bool,
 		VerifySsl:      verifySsl,
 		DeploymentName: deploymentName,
 		Hostname:       hostname,
+		Platform:       platform,
 		FlushTimeout:   time.Duration(flushTimeout) * time.Second,
 		Queue:      make(chan ContainerLogMessage),
 	}
@@ -83,7 +85,7 @@ func (a *Adapter) Stream(logstream chan *router.Message) {
 			Message:           m.Data,
 			Source:            m.Source,
 			EpochNanos:        m.Time.UnixNano(),
-			Collector:         collectorVers,
+			Collector:         collectorVers + "-" + a.Platform,
 			ZeDeploymentName:  a.DeploymentName,
                         Container:  ContainerMeta {
 				Name:     strings.Trim(m.Container.Name, "/"),

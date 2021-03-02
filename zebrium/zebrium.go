@@ -19,6 +19,7 @@ const (
 	VerifySslEnvVar      = "ZE_VERIFY_SSL"
 	DeploymentNameEnvVar = "ZE_DEPLOYMENT_NAME"
 	HostnameEnvvar       = "ZE_HOSTNAME"
+	AwsExecEnv           = "AWS_EXECUTION_ENV"
 	MaxIngestSizeEnvVar  = "ZE_MAX_INGEST_SIZE"
 	FlushTimeoutEnvVar   = "ZE_FLUSH_TIMEOUT"
 )
@@ -68,10 +69,19 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 	}
 
 	deploymentName := os.Getenv(DeploymentNameEnvVar)
+	log.Printf("%s=%s", DeploymentNameEnvVar, deploymentName)
 	deploymentName = strings.Trim(deploymentName, " \t\"'")
 	if deploymentName == "" {
 		deploymentName = "default"
 		log.Println("Use default deployment name ", deploymentName)
+	}
+
+	platform := "docker"
+	awsEnvVal := os.Getenv(AwsExecEnv)
+	log.Printf("%s=%s", AwsExecEnv, awsEnvVal)
+	if awsEnvVal != "" && strings.HasPrefix(awsEnvVal, "AWS_ECS_") {
+		log.Printf("Detected running on ECS (%s=%s), set platform to ecs", AwsExecEnv, awsEnvVal)
+		platform := "ecs"
 	}
 
 	ingestSizeStr := os.Getenv(MaxIngestSizeEnvVar)
@@ -99,6 +109,7 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 		verifySsl,
 		deploymentName,
 		os.Getenv(HostnameEnvvar),
+		platform,
 		ingestSize,
 		flushTimeout,
 	), nil

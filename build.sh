@@ -6,7 +6,7 @@
 #
 # To build container image, use the command below:
 #
-# docker build --no-cache -t <repo>/ze-docker-log-collector:<tag> -f Dockerfile .
+# docker build --no-cache -t <your_name>/docker-log-collector:<tag> -f Dockerfile .
 #
 # Please note code for building is from github.com/zebrium/ze-docker-log-collector/zebrium,
 # not this repo. So you must commit and push changes before you make a build.
