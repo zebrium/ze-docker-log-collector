@@ -69,7 +69,7 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 	}
 
 	deploymentName := os.Getenv(DeploymentNameEnvVar)
-	log.Printf("%s=%s", DeploymentNameEnvVar, deploymentName)
+	log.Printf("%s=%s\n", DeploymentNameEnvVar, deploymentName)
 	deploymentName = strings.Trim(deploymentName, " \t\"'")
 	if deploymentName == "" {
 		deploymentName = "default"
@@ -78,9 +78,9 @@ func NewZebriumAdapter(route *router.Route) (router.LogAdapter, error) {
 
 	platform := "docker"
 	awsEnvVal := os.Getenv(AwsExecEnv)
-	log.Printf("%s=%s", AwsExecEnv, awsEnvVal)
+	log.Printf("%s=%s\n", AwsExecEnv, awsEnvVal)
 	if awsEnvVal != "" && strings.HasPrefix(awsEnvVal, "AWS_ECS_") {
-		log.Printf("Detected running on ECS (%s=%s), set platform to ecs", AwsExecEnv, awsEnvVal)
+		log.Printf("Detected running on ECS (%s=%s), set platform to ecs\n", AwsExecEnv, awsEnvVal)
 		platform := "ecs"
 	}
 

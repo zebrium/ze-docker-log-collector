@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	collectorVers = "1.47.0"
+	collectorVers = "1.48.0"
 )
 
 type Adapter struct {
@@ -69,7 +69,8 @@ func New(zapiUrl string, zapiToken string, verifySsl bool,
 		Queue:      make(chan ContainerLogMessage),
 	}
 
-	log.Printf("zapiUrl=%s maxIngestSize=%d flushTimeout=%d\n", zapiUrl, maxIngestSize, flushTimeout)
+	log.Printf("zapiUrl=%s maxIngestSize=%d flushTimeout=%d collectorVers=%s platform=%s\n",
+		   zapiUrl, maxIngestSize, flushTimeout, collectorVers, platform)
 
 	go adapter.readQueue()
 	return adapter
