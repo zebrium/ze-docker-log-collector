@@ -1,120 +1,52 @@
 # DOCKER CONTAINER LOG COLLECTOR
-Zebrium's docker container log collector collects container logs and sends logs to Zebrium for automated Incident detection.
-Our github repository is located [here](https://github.com/zebrium/ze-docker-log-collector).
 
-# ze-docker-log-collector
+Zebrium's docker container log collector collects container logs and sends logs to Zebrium for automated Incident detection.  This is achieved by using the [Fluentd logging driver for Docker](https://docs.docker.com/config/containers/logging/fluentd/) and the Zebrium Fluentd [output plugin.](https://github.com/zebrium/fluentd-output-zebrium)
 
 ## Getting Started
-### Docker
-Use the following command to create a docker log collector container:
+
+When sending your logs from your docker daemon to Zebrium, there are two configuration options for where your log collector can be installed in configured.  The collector can be installed within the docker daemon context that you are sending all the logs from, or it could be installed on an external host, and have the logs routed to it by each docker daemon.
+
+### Deploying the Collector
+
+Regardless on the installation method, you will start the collector using the following command, substituting the token and URL in for the values found in your Zebrium Integration and Collectors page.  Additional ENVS listed [below](#environment-variables) can be specified to the collector to further extend the functionality.
+
+```bash
+docker run -p 24224:24224 -e ZE_LOG_COLLECTOR_URL=<URL> -e ZE_LOG_COLLECTOR_TOKEN=<TOKEN> zebrium/docker-log-collector:latest
 ```
-sudo docker run -d --name="zdocker-log-collector" --restart=always \
-                -v=/var/run/docker.sock:/var/run/docker.sock \
-                -e ZE_LOG_COLLECTOR_URL="<ZE_LOG_COLLECTOR_URL>" \
-                -e ZE_LOG_COLLECTOR_TOKEN="<ZE_LOG_COLLECTOR_TOKEN>" \
-                -e ZE_HOSTNAME="<HOSTNAME>" \
-                -e ZE_DEPLOYMENT_NAME="YOUR_DEPLOYMENT_NAME_HERE" \
-                zebrium/docker-log-collector:latest
+
+### Configuring the Docker daemon
+
+Once our collector has been deployed and configured, we need to modify the docker daemon configuration to start sending logs to the collector.  For a complete list of configuration options, please see the [official docker documentation](https://docs.docker.com/config/containers/logging/fluentd/).  The docker daemon is located in `/etc/docker/daemon.json` on Linux host and `C:\ProgramData\docker\config\daemon.json` on windows host.  For more about the docker daemon.json, see the [official documentation](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file)
+
+Add the following configuration to your daemon.json file, substituting `<fluentd-address>` for the address of your log collector.  If your log collector is deployed in the same docker daemon, then use `127.0.0.1:24224` as your address.  
+
+```bash
+{
+"log-driver": "fluentd",
+  "log-opts": {
+    "fluentd-address": "<fluentd-address>",
+    "fluentd-async": "true"
+  }
+}
 ```
 
-### Docker Compose
-Use the following configuration file to deploy via docker-compose command:
-```
-version: '3.5'
+Once the daemon file is updated, restart the docker daemon for the new changes to take effect.  After this, your should be able to view the logs of the log collector and verify that it is receiving and forwarding logs to Zebrium.
 
-services:
-  zdocker-log-collector:
-    image: zebrium/docker-log-collector:latest
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      ZE_LOG_COLLECTOR_URL: "<ZE_LOG_COLLECTOR_URL>"
-      ZE_LOG_COLLECTOR_TOKEN: "<ZE_LOG_COLLECTOR_TOKEN>"
-      ZE_DEPLOYMENT_NAME: "<YOUR_DEPLOYMENT_NAME_HERE>"
-      ZE_HOSTNAME: "<HOSTNAME>"
-```
-### AWS Elastic Container Service (ECS)
+### Environment Variables
 
-Add the following service to ECS on EC2 cluster configuration.
-```
-services:
-  zdocker-log-collector:
-    image: zebrium/docker-log-collector:latest
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      ZE_LOG_COLLECTOR_URL: "<ZE_LOG_COLLECTOR_URL>"
-      ZE_LOG_COLLECTOR_TOKEN: "<ZE_LOG_COLLECTOR_TOKEN>"
-      ZE_DEPLOYMENT_NAME: "<YOUR_DEPLOYMENT_NAME_HERE>"
-```
-To collect container logs from all nodes in an ECS cluster, zdocker-log-collector service must be configured to run as an ECS daemon task. Please follow the steps below to configure the daemon task:
-1. Log in to the AWS console and navigate to the ECS Clusters section. Click into your cluster you run the Agent on.
-2. Choose Service tab, click on the Create button.
-3. For launch type, select EC2, for service type, select DAEMON, type a service name, and click on Next step.
-4. For Load balance type option, select None, and click on Next step. On next page, select Next step without configuring Auto Scaling.
-5. Review and click on Create Service.
+Below is a list of environment variables that are available for configuration of the Fluentd container.
 
-Please note ECS tasks must be configured to use 'json-file' Log Driver for Zebrium log collector to receive container logs. If there is special log configuration on ECS instances, for example, using UserData section on instance to set log configuration, those configurations may need to be modified or deleted.
+| Environment Variables | Default | Description | Required |
+|-------------------|-------------------|-------------------| ---|
+| ZE_LOG_COLLECTOR_URL | "" | Zebrium URL Endpoint for log ingestion| yes|
+| ZE_LOG_COLLECTOR_TOKEN | "" | Zebrium ZAPI token for log ingestion| yes|
+| ZE_DEPLOYMENT_NAME | "default" | Zebrium Service Group Name| no|
+| FLUSH_INTERVAL | "60s" | Buffer Flush Interval| no|
+| ZE_LOG_LEVEL | "info" | Sets the log level for the output plugin | no |
+| VERIFY_SSL | "true" | Enables or disables SSL verification on endpoint| no|
 
-## Environment Variables
-The following environment variables are supported by the collector:
-<table>
-  <tr>
-    <th>Environment Variables</th>
-    <th>Description</th>
-    <th>Default value</th>
-    <th>Note</th>
-  </tr>
-  <tr>
-    <td>ZE_LOG_COLLECTOR_URL</td>
-    <td>Zebrium log host server URL</td>
-    <td>None. Must be set by user</td>
-    <td>Provided by Zebrium once your account has been created.</td>
-  </tr>
-  <tr>
-    <td>ZE_LOG_COLLECTOR_TOKEN</td>
-    <td>Authentication token</td>
-    <td>None. Must be set by user</td>
-    <td>Provided by Zebrium once your account has been created.</td>
-  </tr>
-  <tr>
-    <td>ZE_HOSTNAME</td>
-    <td>Hostname of docker host</td>
-    <td>Empty. Optional</td>
-    <td>If ZE_HOSTNAME is not set, container hostname is used as source host for logs.</td>
-  </tr>
-  <tr>
-    <td>ZE_MAX_INGEST_SIZE</td>
-    <td>Maximum size of post request for Zebrium log server</td>
-    <td>1048576 bytes. Optional</td>
-    <td>Unit is in bytes</td>
-  </tr>
-  <tr>
-    <td>ZE_FLUSH_TIMEOUT</td>
-    <td>Interval between sending batches of log data to Zebrium log server.</td>
-    <td>30 seconds. Optional</td>
-    <td>Unit is in seconds. Please note Zebrium output plugin sends data immediately to log server when accumulated data reaches ZE_MAX_INGEST_SIZE bytes.</td>
-  </tr>
-  <tr>
-    <td>ZE_FILTER_NAME</td>
-    <td>Collect logs for containers whose names match filter name pattern. These can include wildcards, for example, <i>my_container1*</i></td>
-    <td>Empty. Optional</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>ZE_FILTER_LABELS</td>
-    <td>Collect logs for containers whose labels match the labels as defined in ZE_FILTER_LABELS. The format is: <i>label1:label1_value,label2:label2_value</i> These can include wildcards, for example, <i>my_label:xyz*</i></td>
-    <td>Empty. Optional</td>
-    <td></td>
-  </tr>
+## Additional Resources
 
-</table>
-
-
-## Testing your installation
-Once the docker log collector software has been deployed in your environment, your container logs and incident detection will be available in the Zebrium UI.
-
-## Contributors
-* Brady Zuo (Zebrium)
+* [Github repository](https://github.com/zebrium/ze-docker-log-collector)
+* [Fluentd Documentation](https://www.fluentd.org/guides/recipes/docker-logging)
+* [Docker Plugin Documentation](https://docs.docker.com/config/containers/logging/fluentd/)
