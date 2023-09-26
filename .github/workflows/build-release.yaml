@@ -41,13 +41,11 @@ jobs:
           images: |
             name=zebrium/${{env.IMAGE_NAME }}
             name=ghcr.io/Zebrium/${{env.IMAGE_NAME }}
-          ags: |
+          tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{raw}}
             type=semver,pattern={{major}}.{{minor}}
             type-semver,pattern=v{{major}}
-          flavor: |
-            latest=true
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
