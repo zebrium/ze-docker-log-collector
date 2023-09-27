@@ -7,9 +7,8 @@ currently being supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| >= 1.60.0 | :white_check_mark: |
-
+| >= 2.0.0| :white_check_mark: |
 
 ## Reporting a Vulnerability
 
-Please reach out to security@zebrium.com with any concerns or findings.  
+Please reach out to <security@zebrium.com> with any concerns or findings.  
