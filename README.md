@@ -11,7 +11,7 @@ When sending your logs from your docker daemon to Zebrium, there are two configu
 Regardless on the installation method, you will start the collector using the following command, substituting the token and URL in for the values found in your Zebrium Integration and Collectors page.  Additional ENVS listed [below](#environment-variables) can be specified to the collector to further extend the functionality.
 
 ```bash
-docker run -p 24224:24224 -e ZE_LOG_COLLECTOR_URL=<URL> -e ZE_LOG_COLLECTOR_TOKEN=<TOKEN> zebrium/docker-log-collector:latest
+docker run -p 24224:24224 -e ZE_LOG_COLLECTOR_URL=<URL> -e ZE_LOG_COLLECTOR_TOKEN=<TOKEN> --restart always zebrium/docker-log-collector:latest
 ```
 
 ### Configuring the Docker daemon
@@ -40,7 +40,7 @@ Below is a list of environment variables that are available for configuration of
 |-------------------|-------------------|-------------------| ---|
 | ZE_LOG_COLLECTOR_URL | "" | Zebrium URL Endpoint for log ingestion| yes|
 | ZE_LOG_COLLECTOR_TOKEN | "" | Zebrium ZAPI token for log ingestion| yes|
-| ZE_DEPLOYMENT_NAME | "default" | Zebrium Service Group Name| no|
+| ZE_DEPLOYMENT_NAME | "default" | Zebrium Service Group Name.  Read more [here](https://docs.sciencelogic.com/zebrium/latest/Content/Web_Zebrium/Key_Concepts.html#service-groups)| no|
 | FLUSH_INTERVAL | "60s" | Buffer Flush Interval| no|
 | ZE_LOG_LEVEL | "info" | Sets the log level for the output plugin | no |
 | VERIFY_SSL | "true" | Enables or disables SSL verification on endpoint| no|
